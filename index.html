@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+       <style>
+           .col-md-12 { margin-bottom: 20px; }
+        #command {
+            white-space: pre;
+            word-wrap: break-word;
+        }
+        .hero { height: 71px; width: 127px; }
+        .hero.taken {
+            -webkit-filter: grayscale(1);
+        }
+        .members { }
+        .slot {
+            background: #666;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='71px' width='127px'><text text-anchor='middle' x='63' y='40' fill='lightgray' font-size='18'>Empty</text></svg>");
+            background-repeat: no-repeat;
+            box-shadow: inset 0 0 10px #222;
+            display: inline-block;
+            height: 71px;
+            margin: 0;
+            width: 127px;
+        }
+        .slot img { vertical-align: initial; }
+        .slot.selected {
+            box-shadow: inset 0 0 40px #0f0;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        var heroes = {
+            'Abaddon': 'abaddon',
+            'Alchemist': 'alchemist',
+            'Ancient Apparition': 'ancient_apparition',
+            'Anti-Mage': 'antimage',
+            'Arc Warden': 'arc_warden',
+            'Axe': 'axe',
+            'Bane': 'bane',
+            'Batrider': 'batrider',
+            'Beastmaster': 'beastmaster',
+            'Bloodseeker': 'bloodseeker',
+            'Bounty Hunter': 'bounty_hunter',
+            'Brewmaster': 'brewmaster',
+            'Bristleback': 'bristleback',
+            'Broodmother': 'broodmother',
+            'Centaur Warrunner': 'centaur',
+            'Chaos Knight': 'chaos_knight',
+            'Chen': 'chen',
+            'Clinkz': 'clinkz',
+            'Clockwerk': 'rattletrap',
+            'Crystal Maiden': 'crystal_maiden',
+            'Dark Seer': 'dark_seer',
+            'Dazzle': 'dazzle',
+            'Death Prophet': 'death_prophet',
+            'Disruptor': 'disruptor',
+            'Doom': 'doom_bringer',
+            'Dragon Knight': 'dragon_knight',
+            'Drow Ranger': 'drow_ranger',
+            'Earth Spirit': 'earth_spirit',
+            'Earthshaker': 'earthshaker',
+            'Elder Titan': 'elder_titan',
+            'Ember Spirit': 'ember_spirit',
+            'Enchantress': 'enchantress',
+            'Enigma': 'enigma',
+            'Faceless Void': 'faceless_void',
+            'Gyrocopter': 'gyrocopter',
+            'Huskar': 'huskar',
+            'Invoker': 'invoker',
+            'Io': 'wisp',
+            'Jakiro': 'jakiro',
+            'Juggernaut': 'juggernaut',
+            'Keeper of the Light': 'keeper_of_the_light',
+            'Kunkka': 'kunkka',
+            'Legion Commander': 'legion_commander',
+            'Leshrac': 'leshrac',
+            'Lich': 'lich',
+            'Lifestealer': 'life_stealer',
+            'Lina': 'lina',
+            'Lion': 'lion',
+            'Lone Druid': 'lone_druid',
+            'Luna': 'luna',
+            'Lycan': 'lycan',
+            'Magnus': 'magnataur',
+            'Medusa': 'medusa',
+            'Meepo': 'meepo',
+            'Mirana': 'mirana',
+            'Morphling': 'morphling',
+            'Naga Siren': 'naga_siren',
+            "Nature's Prophet": 'furion',
+            'Necrophos': 'necrolyte',
+            'Night Stalker': 'night_stalker',
+            'Nyx Assassin': 'nyx_assassin',
+            'Ogre Magi': 'ogre_magi',
+            'Omniknight': 'omniknight',
+            'Oracle': 'oracle',
+            'Outworld Devourer': 'obsidian_destroyer',
+            'Phantom Assassin': 'phantom_assassin',
+            'Phantom Lancer': 'phantom_lancer',
+            'Phoenix': 'phoenix',
+            'Puck': 'puck',
+            'Pudge': 'pudge',
+            'Pugna': 'pugna',
+            'Queen of Pain': 'queenofpain',
+            'Razor': 'razor',
+            'Riki': 'riki',
+            'Rubick': 'rubick',
+            'Sand King': 'sand_king',
+            'Shadow Demon': 'shadow_demon',
+            'Shadow Fiend': 'nevermore',
+            'Shadow Shaman': 'shadow_shaman',
+            'Silencer': 'silencer',
+            'Skywrath Mage': 'skywrath_mage',
+            'Slardar': 'slardar',
+            'Slark': 'slark',
+            'Sniper': 'sniper',
+            'Spectre': 'spectre',
+            'Spirit Breaker': 'spirit_breaker',
+            'Storm Spirit': 'storm_spirit',
+            'Sven': 'sven',
+            'Techies': 'techies',
+            'Templar Assassin': 'templar_assassin',
+            'Terrorblade': 'terrorblade',
+            'Tidehunter': 'tidehunter',
+            'Timbersaw': 'shredder',
+            'Tinker': 'tinker',
+            'Tiny': 'tiny',
+            'Treant Protector': 'treant',
+            'Troll Warlord': 'troll_warlord',
+            'Tusk': 'tusk',
+            'Undying': 'undying',
+            'Ursa': 'ursa',
+            'Vengeful Spirit': 'vengefulspirit',
+            'Venomancer': 'venomancer',
+            'Viper': 'viper',
+            'Visage': 'visage',
+            'Warlock': 'warlock',
+            'Weaver': 'weaver',
+            'Windranger': 'windrunner',
+            'Winter Wyvern': 'winter_wyvern',
+            'Witch Doctor': 'witch_doctor',
+            'Wraith King': 'skeleton_king',
+            'Zeus': 'zuus'
+        };
+        var imagePrefix = 'http://cdn.dota2.com/apps/dota2/images/heroes/';
+        var imageSuffix = '_hphover.png';
+        var npcPrefix = 'npc_dota_hero_';
+
+        jQuery.fn.outerHTML = function (s) {
+            return s
+                ? this.before(s).remove()
+                : jQuery("<p>").append(this.eq(0).clone()).html();
+        };
+
+        $(document).ready(function () {
+            $(document)
+                .on('click', '#heros .hero', onHeroClick)
+                .on('click', '.slot', onSlotClick);
+
+            var html = '';
+            $.each(heroes, function (key, value) {
+                var item = '<img class="hero" data-hero="' + value + '" src="' + imagePrefix + value + imageSuffix + '">';
+                html += item;
+            });
+            $('#heros').html(html);
+
+            var $command = $('#command');
+            var $slots = $('.slot');
+            updateCommand();
+
+            function onHeroClick() {
+                var $this = $(this);
+                var img = $this.outerHTML();
+
+                var $slot = $('.slot.selected');
+                if ($slot.length == 0)
+                    return;
+
+                if ($this.hasClass('taken'))
+                    return;
+
+                $this.addClass('taken');
+                $slot.html(img).removeClass('selected');                
+                
+                var slotIndex = $slots.index($slot);
+                if (slotIndex < $slots.length) {
+                    var $nextSlot = $slots.slice(slotIndex + 1, slotIndex + 2);
+                    $nextSlot.addClass('selected');
+                }
+
+                updateCommand();
+            }
+
+            function onSlotClick() {
+                var $this = $(this);
+
+                $('.slot.selected').removeClass('selected');
+
+                var hero = $this.find('img').data('hero');
+                $('.taken[data-hero=' + hero + ']').removeClass('taken');
+
+                $this.html('').addClass('selected');
+                updateCommand();
+            }
+
+            function updateCommand() {
+                $command.text('');
+
+                var heros = new Array();
+                var $selectedHeros = $('.slot img');
+                $.each($selectedHeros, function (index, element) {
+                    var hero = $(this).data('hero');
+                    if (hero != null)
+                        heros.push(npcPrefix + hero);
+                });
+
+                $command.text('dota_bot_force_pick ' + heros.join());
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Dota 2 - Captains Mode for Bots</h1>
+        <ol>
+            <li>Choose your teams</li>
+            <li>Run the console command</li>
+            <li>Start the bot game</li>
+        </ol>
+        <div class="col-md-12">
+            <h1>Console Command</h1>
+            <span id="command"></span>
+        </div>
+        <div id="radiant" class="col-md-6">
+            <h1>Radiant</h1>
+            <div class="col-md-12 members">
+                <div class="slot"></div>
+                <div class="slot selected"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+            </div>
+        </div>
+        <div id="dire" class="col-md-6">
+            <h1>Dire</h1>
+            <div class="col-md-12 members">
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+            </div>
+        </div>
+        <div class="col-md-12" id="heros"></div>
+    </div>
+</body>
+</html>
