@@ -200,6 +200,12 @@
                     return;
 
                 $this.addClass('taken');
+                
+                if ($slot.find('img').length === 1) {
+                    var existingHero = $slot.find('img').data('hero');
+                    $('#heros').find('.hero[data-hero="' + existingHero + '"]').removeClass('taken');
+                }
+                
                 $slot.html(img).removeClass('selected');                
                 
                 var slotIndex = $slots.index($slot);
